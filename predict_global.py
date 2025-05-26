@@ -23,34 +23,24 @@ for col in expected_cols:
         df[col] = 0
 df = df[expected_cols]
 
-# Verificación
 print(f"✔️ Columnas alineadas: {list(df.columns)}")
 print(f"✔️ Shape del input: {df.shape}")
 
-# --- Escalado ---
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(df)
-
-# --- Cargar modelo y pesos ---
 model = create_model(input_dim=len(expected_cols))
 model.load_weights(weights_path)
-
-# --- Predicción ---
 preds = model.predict(X_scaled).flatten()
-
-# --- Construir salida ---
 output_df = pd.DataFrame({
     "day": df_orig["day"],
     "predicted_weight_kg": preds
 })
 
-# --- Comparar con peso real si está disponible ---
 if "weight" in df_orig.columns:
     output_df["real_weight_kg"] = df_orig["weight"]
     mae = mean_absolute_error(output_df["real_weight_kg"], output_df["predicted_weight_kg"])
     print(f"📏 MAE del modelo global: {mae:.2f}")
 
-# --- Guardar resultado ---
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
 output_df.to_csv(output_path, index=False)
-print(f"✅ Predicciones guardadas en: {output_path}")
+print(f"Predicciones guardadas en: {output_path}")
