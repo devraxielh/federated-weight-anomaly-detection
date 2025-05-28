@@ -1,0 +1,5 @@
+MAE : 1.95 kg
+R²  : 0.9985
+Anomalías detectadas: 399 / 8200 (4.87%)
+
+Top 5 animales más anómalos exportados a: results/top_5_anomalous.csv
