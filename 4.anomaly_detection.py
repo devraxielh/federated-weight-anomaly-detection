@@ -56,6 +56,6 @@ import seaborn as sns
 sns.histplot(output_df["residual"], kde=True)
 plt.axvline(x=threshold, color="red", linestyle="--", label="±2σ")
 plt.axvline(x=-threshold, color="red", linestyle="--")
-plt.title("Distribución de residuales")
+plt.title("Distribution of residuals")
 plt.legend()
 plt.show()
