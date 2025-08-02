@@ -5,8 +5,6 @@ from model import create_model
 from sklearn.preprocessing import StandardScaler
 import sys
 import os
-import time
-import json
 
 class FederatedClient(fl.client.NumPyClient):
     def __init__(self, farm_path):
@@ -20,21 +18,8 @@ class FederatedClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config):
         self.model.set_weights(parameters)
-        start_time = time.time()
-        history = self.model.fit(
-            self.X_train, self.y_train,
-            epochs=10, batch_size=32, verbose=0
-        )
-        duration = time.time() - start_time
-        print(f"[{self.farm_name}] Tiempo entrenamiento: {duration:.2f}s - Última pérdida: {history.history['loss'][-1]:.4f}")
-
-        # Guardar curvas de aprendizaje por ronda
-        os.makedirs(f"results/local_histories/{self.farm_name}", exist_ok=True)
-        history_path = f"results/local_histories/{self.farm_name}/round_{config.get('server_round', 0)}.json"
-        with open(history_path, "w") as f:
-            json.dump(history.history, f)
-
-        return self.model.get_weights(), len(self.X_train), {"duration": duration}
+        self.model.fit(self.X_train, self.y_train, epochs=10, batch_size=32, verbose=0)
+        return self.model.get_weights(), len(self.X_train), {}
 
     def evaluate(self, parameters, config):
         self.model.set_weights(parameters)
